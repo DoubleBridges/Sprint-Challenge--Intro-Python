@@ -5,15 +5,11 @@ import os
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 
-print(os.path.dirname(__file__))
-
-
 class City():
-    def __init__(self, name, lat, lon):
+    def __init__(self, name: str, lat: float, lon: float):
         self.name = name
         self.lat = lat
         self.lon = lon
-
 
     # We have a collection of US cities with population over 750,000 stored in the
     # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -27,6 +23,8 @@ class City():
     #
     # Note that the first line of the CSV is header that describes the fields--this
     # should not be loaded into a City object.
+
+
 cities = []
 
 
@@ -90,13 +88,33 @@ for c in cities:
 
 # TODO Get latitude and longitude values from the user
 
+defined_area = input(
+    '\n\nEnter two pair of coordiantes to determine search area\n\nFormat: lat-1, lon-1, lat-2, lon-2\n\n')
 
-def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
-  # within will hold the cities that fall within the specified region
-    within = []
+coordinate_pairs = [float(point.strip()) for point in defined_area.split(',')]
+
+square = sorted(((coordinate_pairs[0], coordinate_pairs[1]),
+                 (coordinate_pairs[2], coordinate_pairs[3])), key=lambda tup: tup[0])
+
+
+def cityreader_stretch(lat1: float, lon1: float, lat2: float, lon2: float, cities: list = []):
+    # within will hold the cities that fall within the specified region
+
+    within = [city for city in cities if lat1 <=
+              float(city.lat) <= lat2 and lon1 <= float(city.lon) <= lon2]
 
     # TODO Ensure that the lat and lon valuse are all floats
     # Go through each city and check to see if it falls within
     # the specified coordinates.
+    # def is_in_area(city=object):
+    #     if lat1 <= city.lat <= lat2 and lon1 <= city.lon <= lat2:
+    #         return city
 
     return within
+
+
+encapsulated_cities = cityreader_stretch(
+    square[0][0], square[0][1], square[1][0], square[1][1], cities)
+
+for city in encapsulated_cities:
+    print(f'{city.name}: ({city.lat}, {city.lon}')
